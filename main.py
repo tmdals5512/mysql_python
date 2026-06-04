@@ -21,8 +21,14 @@ while True:
         for board in boards:
             print(board[0],board[1],board[2],board[3])
 
-    #elif menu == "2":
+    elif menu == "2":
+        board_dao.register()
 
+    elif menu == "3":
+        board_dao.show_content() 
+    
+    elif menu == "4":
+        board_dao.delete_content()
 
 
 
