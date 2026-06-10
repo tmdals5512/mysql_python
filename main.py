@@ -7,7 +7,7 @@ board_dao =BoardDAO()
 board_dao.get_connection()
 while True:
     print("=" * 40)
-    print("1.목록 2.등록 3.내용 4.삭제 0.종료")
+    print("1.목록 2.등록 3.내용 4.삭제 5.수정 0.종료")
     print("=" * 40)
 
     menu = input("선택 > ")
@@ -29,7 +29,9 @@ while True:
     
     elif menu == "4":
         board_dao.delete_content()
-
+    
+    elif menu == "5":
+        board_dao.update_content() 
 
 
 print("게시판 종료")

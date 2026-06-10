@@ -97,3 +97,27 @@ class BoardDAO:
         finally:
             cursor.close()
             conn.close()
+
+    def update_content(self):
+        conn = self.get_connection()
+        cursor = conn.cursor()
+        try:
+            id = int(input("수정 ID를 입력 하세요: "))
+            new_title = input("새로운 제목을 입력하세요: ")
+            new_content = input("새로운 내용을 입력하세요: ")
+            sql = """UPDATE BOARD SET TITLE = '%s', CONTENT = '%s' WHERE ID = %d """ % (new_title, new_content, id)
+            # print(sql)
+            cursor.execute(sql)
+            conn.commit()
+
+        except ValueError:
+            print("숫자만 입력하세요.")
+            return
+        
+        except IndexError:
+            print("해당 ID의 게시물이 존재하지 않습니다.")
+            return
+        
+        finally:
+            cursor.close()
+            conn.close()
