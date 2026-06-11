@@ -32,18 +32,18 @@ class BoardDAO:
 
         return result
     
-    def register(self):
+    def register(self, login_id):
         conn = self.get_connection()
         cursor = conn.cursor()
         
         title = input("제목을 입력하시오: ")
         content = input("내용을 입력하시오: ")
-        name = input("사용자 이름을 입력하시오: ")
+        # name = input("사용자 이름을 입력하시오: ")
 
-        sql = """INSERT INTO board (title, content, writer)
-        VALUES ('{}', '{}', '{}');""".format(title, content, name)
+        sql = """INSERT INTO board (title, content, user_id) 
+        VALUES ('{}', '{}', '{}');""".format(title, content, login_id)
 
-        #print(sql)
+        # print(sql)
         cursor.execute(sql)
         conn.commit()
         cursor.close()
@@ -59,11 +59,11 @@ class BoardDAO:
             cursor.execute(sql)
             result = cursor.fetchall()
             # print(result)
-            print("ID:", result[0][0])
-            print("제목:", result[0][1])
-            print("작성자:", result[0][3])
+            print("게시글 ID:", result[0][0])
+            print("제목:", result[0][2])
+            print("작성자:", result[0][1])
             print("작성시각:", result[0][4])
-            print("내용:", result[0][2])
+            print("내용:", result[0][3])
         
         except ValueError:
             print("숫자만 입력하세요.")
@@ -77,12 +77,12 @@ class BoardDAO:
             cursor.close()
             conn.close()
 
-    def delete_content(self):
+    def delete_content(self, login_id):
         conn = self.get_connection()
         cursor = conn.cursor()
         try:
             id = int(input("삭제할 ID를 입력 하세요: "))
-            sql = """DELETE FROM BOARD WHERE ID = %d""" % (id)
+            sql = """DELETE FROM BOARD WHERE ID = %d AND USER_ID = '%s'""" % (id, login_id)
             cursor.execute(sql)
             conn.commit()
 
@@ -98,14 +98,14 @@ class BoardDAO:
             cursor.close()
             conn.close()
 
-    def update_content(self):
+    def update_content(self, login_id):
         conn = self.get_connection()
         cursor = conn.cursor()
         try:
             id = int(input("수정 ID를 입력 하세요: "))
             new_title = input("새로운 제목을 입력하세요: ")
             new_content = input("새로운 내용을 입력하세요: ")
-            sql = """UPDATE BOARD SET TITLE = '%s', CONTENT = '%s' WHERE ID = %d """ % (new_title, new_content, id)
+            sql = """UPDATE BOARD SET TITLE = '%s', CONTENT = '%s' WHERE ID = %d AND USER_ID = '%s'""" % (new_title, new_content, id, login_id)
             # print(sql)
             cursor.execute(sql)
             conn.commit()
