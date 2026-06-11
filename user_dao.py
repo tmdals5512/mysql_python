@@ -43,3 +43,32 @@ class UserDAO:
         else:
             print("\n로그인 실패: 아이디 또는 비밀번호가 일치하지 않습니다.")
             return None
+    def register_user(self):
+        """회원 가입을 처리하는 함수"""
+        conn = self.get_connection()
+        cursor = conn.cursor()
+        
+        print("\n--- 회원 가입 ---")
+        user_id = input("사용할 ID를 입력하세요: ")
+        password = input("비밀번호를 입력하세요: ")
+        name = input("이름(닉네임)을 입력하세요: ")
+        email = input("이메일을 입력하세요 (선택): ")
+
+        try:
+            # user_id는 UNIQUE 제약 조건이 있으므로 중복 가입을 방지합니다.
+            sql = """INSERT INTO user (user_id, password, name, email) 
+                     VALUES ('%s', '%s', '%s', '%s')""" % (user_id, password, name, email)
+            
+            cursor.execute(sql)
+            conn.commit()
+            print("\n회원가입이 완료되었습니다! 로그인을 진행해 주세요.\n")
+            
+        except pymysql.serializers.err.IntegrityError:
+            # 똑같은 ID로 가입을 시도할 때 발생하는 에러 처리
+            print("\n오류: 이미 존재하는 아이디입니다. 다른 아이디를 사용하세요.\n")
+        except Exception as e:
+            print(f"\n오류 발생: {e}\n")
+            conn.rollback()
+        finally:
+            cursor.close()
+            conn.close()

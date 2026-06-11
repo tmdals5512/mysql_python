@@ -12,19 +12,33 @@ login_user = None
 
 while True:
     print("=" * 40)
-    print("               로그인               ")
+    print("       1. 로그인  2. 회원가입  0. 종료       ")
     print("=" * 40)
     
-    login_user = user_dao.login() 
+    choice = input("선택 > ")
     
-    if login_user is not None:
-        break
-    else:
-        print("로그인 실패! 다시 시도하시겠습니까?")
-        retry = input("종료하려면 '0'을 입력하고, 다시 시도하려면 아무 키나 누르세요: ")
-        if retry == "0":
-            print("프로그램을 종료합니다.")
-            exit() # 프로그램 강제 종료
+    if choice == "0":
+        print("프로그램을 종료합니다.")
+        exit() # 프로그램 강제 종료
+        
+    elif choice == "1":
+        # 기존에 작성하신 로그인 기능 호출
+        login_user = user_dao.login() 
+        
+        if login_user is not None:
+            # 로그인 성공 시 반복문을 빠져나가 게시판 메뉴로 이동
+            break
+        else:
+            print("로그인 실패! 아이디나 비밀번호를 확인하세요.")
+            retry = input("다시 시도하시겠습니까? (종료하려면 '0' 입력, 계속하려면 아무 키나 입력): ")
+            if retry == "0":
+                print("프로그램을 종료합니다.")
+                exit()
+                
+    elif choice == choice == "2":
+        # user_dao에 회원가입 함수를 호출하도록 구현
+        # (아래에 user_dao.py에 추가할 함수도 함께 적어두었습니다.)
+        user_dao.register_user()
 
 while True:
     print("=" * 40)
@@ -56,3 +70,4 @@ while True:
 
 
 print("게시판 종료")
+
