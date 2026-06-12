@@ -58,13 +58,22 @@ class BoardDAO:
             # print(sql)
             cursor.execute(sql)
             result = cursor.fetchall()
-            # print(result)
-            print("게시글 ID:", result[0][0])
-            print("제목:", result[0][2])
-            print("작성자:", result[0][1])
-            print("작성시각:", result[0][4])
-            print("내용:", result[0][3])
-        
+            board_id = result[0][0]
+            writer_no = result[0][1] # 기존의 작성자 번호 (예: 4)
+            title = result[0][2]
+            content = result[0][3]
+            reg_time = result[0][4]
+
+            print("\n" + "=" * 40)
+            print(f"📄 게시글 상세조회 (ID: {board_id})")
+            print("=" * 40)
+            print(f"🔹 제  목 : {title}")
+            print(f"🔹 작성자 : 익명_{writer_no}") # 💡 '익명_4' 형태로 출력되도록 변경
+            print(f"🔹 작성일 : {reg_time}")
+            print("-" * 40)
+            print(f"📝 내  용 :\n\n{content}")
+            print("=" * 40 + "\n")
+            
         except ValueError:
             print("숫자만 입력하세요.")
             return
