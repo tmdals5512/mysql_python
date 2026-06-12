@@ -17,10 +17,7 @@ class UserDAO:
         )
 
     def login(self):
-        """
-        main.py에서 직접 호출하는 로그인 함수
-        성공 시 유저 정보(튜플) 반환, 실패 시 None 반환
-        """
+
         conn = self.get_connection()
         cursor = conn.cursor()
         
@@ -28,7 +25,6 @@ class UserDAO:
         user_id = input("ID: ")
         password = input("Password: ")
 
-        # 기존 board_dao의 스타일대로 %s 문자열 포매팅 방식을 사용합니다.
         sql = """SELECT id, user_id, name FROM user WHERE user_id = '%s' AND password = '%s'""" % (user_id, password)
         
         cursor.execute(sql)

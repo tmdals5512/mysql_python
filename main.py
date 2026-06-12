@@ -36,8 +36,6 @@ while True:
                 exit()
                 
     elif choice == choice == "2":
-        # user_dao에 회원가입 함수를 호출하도록 구현
-        # (아래에 user_dao.py에 추가할 함수도 함께 적어두었습니다.)
         user_dao.register_user()
 
 while True:
@@ -54,7 +52,7 @@ while True:
         # print(boards)
 
         for board in boards:
-            print(board[0],board[1],board[2],board[3])
+            print(board[0],board[2],board[3])
 
     elif menu == "2":
         board_dao.register(login_user[0])
