@@ -56,7 +56,7 @@ while True:
         board_dao.register(login_user[0])
 
     elif menu == "3":
-        board_dao.show_content() 
+        board_dao.show_content(login_user[0]) 
     
     elif menu == "4":
         board_dao.delete_content(login_user[0])

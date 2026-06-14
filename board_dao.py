@@ -49,7 +49,7 @@ class BoardDAO:
         cursor.close()
         conn.close()
 
-    def show_content(self):
+    def show_content(self, login_id):
         conn = self.get_connection()
         cursor = conn.cursor()
         try:
@@ -82,7 +82,7 @@ class BoardDAO:
             print("=" * 40 + "\n")
             
             reply_sql = """
-            SELECT r.content, u.user_id, r.created_at 
+            SELECT r.content, u.user_id, r.created_at, r.id 
             FROM reply r
             JOIN user u ON r.user_id = u.id
             WHERE r.board_id = %s
@@ -95,12 +95,37 @@ class BoardDAO:
             
             if replies:
                 for reply in replies:
-                    print(f"{reply[1]} ({reply[2]})")
+                    print(f"{reply[3]} {reply[1]} ({reply[2]})")
                     print(reply[0])
             else:
                 print("아직 등록된 댓글이 없습니다.")
                 
             print("=" * 40 + "\n")
+
+            while True:
+                print(" 1. 댓글 등록   2. 댓글 삭제   3. 메인으로")
+                print("=" * 40)
+                sub_menu = input("선택 > ")
+                if sub_menu == '1':
+                    reply = input("댓글을 입력하세요 > ").strip()
+                    if not reply:
+                        print("댓글내용을 입력해야 합니다.")
+                        continue
+                    
+                    insert_reply_sql = """
+                    INSERT INTO reply (board_id, user_id, content) VALUES ('%s', '%s', '%s')
+                    """ % (board_id, login_id, reply)
+                    # print(insert_reply_sql)
+                    cursor.execute(insert_reply_sql)
+                    conn.commit()
+                    print("댓글이 등록되었습니다.")
+                    break
+
+                elif sub_menu == '2':
+                    pass
+
+                elif sub_menu == '3':
+                    break
 
         except ValueError:
             print("숫자만 입력하세요.")
