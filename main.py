@@ -1,7 +1,7 @@
 from board_dao import * 
 from user_dao import UserDAO
 
-board_dao =BoardDAO()
+board_dao = BoardDAO()
 user_dao = UserDAO()
 
 #커넥션 테스트
@@ -39,6 +39,7 @@ while True:
 while True:
     print("=" * 40)
     print("1.목록 2.등록 3.내용 4.삭제 5.수정 0.종료")
+    print(f"현재 접속 정보 : {login_user[2]}")
     print("=" * 40)
 
     menu = input("선택 > ")

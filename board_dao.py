@@ -56,7 +56,7 @@ class BoardDAO:
             id = int(input("내용을 조회 할 ID를 입력 하세요: "))
             # sql = """SELECT * FROM board WHERE ID = %d""" % (id)
             sql = """
-            SELECT b.ID, b.user_id, b.title, b.content, b.created_at, u.user_id 
+            SELECT b.ID, b.user_id, b.title, b.content, b.created_at, u.user_id, b.updated_at
             FROM board b
             JOIN user u ON b.user_id = u.id
             WHERE b.ID = %s
@@ -70,9 +70,12 @@ class BoardDAO:
             content = result[0][3]
             reg_time = result[0][4]
             user_id = result[0][5]
+            updated_time = result[0][6]
+
+            edited_tag = " (수정됨)" if reg_time != updated_time else ""
 
             print("\n" + "=" * 40)
-            print(f"📄 게시글 상세조회 (ID: {board_id})")
+            print(f"📄 게시글 상세조회 (ID: {board_id}){edited_tag}")
             print("=" * 40)
             print(f"🔹 제  목 : {title}")
             print(f"🔹 작성자 : {user_id}") 
@@ -82,7 +85,7 @@ class BoardDAO:
             print("=" * 40 + "\n")
             
             reply_sql = """
-            SELECT r.content, u.user_id, r.created_at, r.id 
+            SELECT r.content, u.user_id, r.created_at, r.id, r.updated_at
             FROM reply r
             JOIN user u ON r.user_id = u.id
             WHERE r.board_id = %s
@@ -95,18 +98,24 @@ class BoardDAO:
             
             if replies:
                 for reply in replies:
-                    print(f"{reply[3]} {reply[1]} ({reply[2]})")
-                    print(reply[0])
+                    if reply[2] != reply[4]:
+                        print(f"{reply[3]} {reply[1]} ({reply[2]}) (수정됨)")
+                        print(reply[0])
+                    else:
+                        print(f"{reply[3]} {reply[1]} ({reply[2]})")
+                        print(reply[0])
             else:
                 print("아직 등록된 댓글이 없습니다.")
                 
             print("=" * 40 + "\n")
 
             while True:
-                print(" 1. 댓글 등록   2. 댓글 삭제   3. 메인으로")
+                print(" 1. 댓글 등록   2. 댓글 삭제  3. 댓글 수정  0. 메인으로")
                 print("=" * 40)
                 sub_menu = input("선택 > ")
-                if sub_menu == '1':
+
+                if sub_menu == '1': # 댓글 등록
+                    
                     reply = input("댓글을 입력하세요 > ").strip()
                     if not reply:
                         print("댓글내용을 입력해야 합니다.")
@@ -121,10 +130,26 @@ class BoardDAO:
                     print("댓글이 등록되었습니다.")
                     break
 
-                elif sub_menu == '2':
+                elif sub_menu == '2': # 댓글 삭제
+                    try:
+                        reply_id = int(input("삭제할 댓글 번호를 입력하세요 > "))
+                        delete_sql = """DELETE FROM reply WHERE id = '%s' AND user_id = '%s'""" % (reply_id, login_id)
+                        # print(delete_sql)
+                        affected_rows = cursor.execute(delete_sql)
+                        conn.commit()
+
+                        if affected_rows > 0 :
+                            print("댓글이 성공적으로 삭제 되었습니다.")
+                        else : 
+                            print("댓글 삭제 실패")
+                        break;
+                    except ValueError:
+                        print("숫자로 된 댓글 번호를 입력하세요.")
+                
+                elif sub_menu == '3': # 댓글 수정
                     pass
 
-                elif sub_menu == '3':
+                elif sub_menu == '0':
                     break
 
         except ValueError:
