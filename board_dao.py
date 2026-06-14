@@ -54,7 +54,13 @@ class BoardDAO:
         cursor = conn.cursor()
         try:
             id = int(input("내용을 조회 할 ID를 입력 하세요: "))
-            sql = """SELECT * FROM board WHERE ID = %d""" % (id)
+            # sql = """SELECT * FROM board WHERE ID = %d""" % (id)
+            sql = """
+            SELECT b.ID, b.user_id, b.title, b.content, b.created_at, u.user_id 
+            FROM board b
+            JOIN user u ON b.user_id = u.id
+            WHERE b.ID = %s
+            """ % (id) 
             # print(sql)
             cursor.execute(sql)
             result = cursor.fetchall()
@@ -63,12 +69,13 @@ class BoardDAO:
             title = result[0][2]
             content = result[0][3]
             reg_time = result[0][4]
+            user_id = result[0][5]
 
             print("\n" + "=" * 40)
             print(f"📄 게시글 상세조회 (ID: {board_id})")
             print("=" * 40)
             print(f"🔹 제  목 : {title}")
-            print(f"🔹 작성자 : 익명_{writer_no}") # 💡 '익명_4' 형태로 출력되도록 변경
+            print(f"🔹 작성자 : {user_id}") 
             print(f"🔹 작성일 : {reg_time}")
             print("-" * 40)
             print(f"📝 내  용 :\n\n{content}")

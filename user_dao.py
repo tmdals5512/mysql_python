@@ -39,6 +39,7 @@ class UserDAO:
         else:
             print("\n로그인 실패: 아이디 또는 비밀번호가 일치하지 않습니다.")
             return None
+        
     def register_user(self):
         """회원 가입을 처리하는 함수"""
         conn = self.get_connection()

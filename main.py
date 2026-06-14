@@ -22,11 +22,9 @@ while True:
         exit() # 프로그램 강제 종료
         
     elif choice == "1":
-        # 기존에 작성하신 로그인 기능 호출
         login_user = user_dao.login() 
         
         if login_user is not None:
-            # 로그인 성공 시 반복문을 빠져나가 게시판 메뉴로 이동
             break
         else:
             print("로그인 실패! 아이디나 비밀번호를 확인하세요.")
