@@ -56,7 +56,7 @@ class BoardDAO:
             id = int(input("내용을 조회 할 ID를 입력 하세요: "))
             # sql = """SELECT * FROM board WHERE ID = %d""" % (id)
             sql = """
-            SELECT b.ID, b.user_id, b.title, b.content, b.created_at, u.user_id, b.updated_at
+            SELECT b.ID, b.user_id, b.title, b.content, b.created_at, u.user_id, b.updated_at, u.name
             FROM board b
             JOIN user u ON b.user_id = u.id
             WHERE b.ID = %s
@@ -71,6 +71,7 @@ class BoardDAO:
             reg_time = result[0][4]
             user_id = result[0][5]
             updated_time = result[0][6]
+            name = result[0][7]
 
             edited_tag = " (수정됨)" if reg_time != updated_time else ""
 
@@ -78,14 +79,14 @@ class BoardDAO:
             print(f"📄 게시글 상세조회 (ID: {board_id}){edited_tag}")
             print("=" * 40)
             print(f"🔹 제  목 : {title}")
-            print(f"🔹 작성자 : {user_id}") 
+            print(f"🔹 작성자 : {name}") 
             print(f"🔹 작성일 : {reg_time}")
             print("-" * 40)
             print(f"📝 내  용 :\n\n{content}")
             print("=" * 40 + "\n")
             
             reply_sql = """
-            SELECT r.content, u.user_id, r.created_at, r.id, r.updated_at
+            SELECT r.content, u.user_id, r.created_at, r.id, r.updated_at, u.name
             FROM reply r
             JOIN user u ON r.user_id = u.id
             WHERE r.board_id = %s
@@ -99,10 +100,10 @@ class BoardDAO:
             if replies:
                 for reply in replies:
                     if reply[2] != reply[4]:
-                        print(f"{reply[3]} {reply[1]} ({reply[2]}) (수정됨)")
+                        print(f"{reply[3]} {reply[5]} ({reply[2]}) (수정됨)")
                         print(reply[0])
                     else:
-                        print(f"{reply[3]} {reply[1]} ({reply[2]})")
+                        print(f"{reply[3]} {reply[5]} ({reply[2]})")
                         print(reply[0])
             else:
                 print("아직 등록된 댓글이 없습니다.")
@@ -156,7 +157,7 @@ class BoardDAO:
                         # print(update_sql)
                         affected_rows = cursor.execute(update_sql)
                         conn.commit()
-                        
+
                         if affected_rows > 0 :
                             print("댓글이 성공적으로 수정 되었습니다.")
                         else : 
