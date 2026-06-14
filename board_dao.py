@@ -65,7 +65,7 @@ class BoardDAO:
             cursor.execute(sql)
             result = cursor.fetchall()
             board_id = result[0][0]
-            writer_no = result[0][1] # 기존의 작성자 번호 (예: 4)
+            writer_no = result[0][1] 
             title = result[0][2]
             content = result[0][3]
             reg_time = result[0][4]
@@ -81,6 +81,27 @@ class BoardDAO:
             print(f"📝 내  용 :\n\n{content}")
             print("=" * 40 + "\n")
             
+            reply_sql = """
+            SELECT r.content, u.user_id, r.created_at 
+            FROM reply r
+            JOIN user u ON r.user_id = u.id
+            WHERE r.board_id = %s
+            ORDER BY r.created_at ASC
+            """ % board_id
+            cursor.execute(reply_sql)
+            replies = cursor.fetchall()
+            print(f"💬 댓글 ({len(replies)})")
+            print("-" * 40)
+            
+            if replies:
+                for reply in replies:
+                    print(f"{reply[1]} ({reply[2]})")
+                    print(reply[0])
+            else:
+                print("아직 등록된 댓글이 없습니다.")
+                
+            print("=" * 40 + "\n")
+
         except ValueError:
             print("숫자만 입력하세요.")
             return
