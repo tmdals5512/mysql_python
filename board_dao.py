@@ -133,7 +133,7 @@ class BoardDAO:
                 elif sub_menu == '2': # 댓글 삭제
                     try:
                         reply_id = int(input("삭제할 댓글 번호를 입력하세요 > "))
-                        delete_sql = """DELETE FROM reply WHERE id = '%s' AND user_id = '%s'""" % (reply_id, login_id)
+                        delete_sql = """DELETE FROM reply WHERE id = '%s' AND user_id = '%s' AND board_id = '%s'""" % (reply_id, login_id, board_id)
                         # print(delete_sql)
                         affected_rows = cursor.execute(delete_sql)
                         conn.commit()
@@ -147,7 +147,24 @@ class BoardDAO:
                         print("숫자로 된 댓글 번호를 입력하세요.")
                 
                 elif sub_menu == '3': # 댓글 수정
-                    pass
+                    try:
+                        reply_id = int(input("수정 할 댓글 번호를 입력하세요 > "))
+                        update_reply = input("댓글을 입력하세요 > ")
+                        update_sql = """UPDATE reply 
+                        SET content = '%s' 
+                        WHERE id = '%s' AND user_id = '%s' AND board_id = '%s'""" % (update_reply, reply_id, login_id, board_id)
+                        # print(update_sql)
+                        affected_rows = cursor.execute(update_sql)
+                        conn.commit()
+                        
+                        if affected_rows > 0 :
+                            print("댓글이 성공적으로 수정 되었습니다.")
+                        else : 
+                            print("댓글 수정 실패")
+                        break;
+
+                    except ValueError:
+                        print("숫자로 된 댓글 번호를 입력하세요.")
 
                 elif sub_menu == '0':
                     break
