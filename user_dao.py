@@ -1,4 +1,5 @@
 import pymysql
+import getpass
 
 class UserDAO:
     def __init__(self):
@@ -23,8 +24,8 @@ class UserDAO:
         
         print("\n--- 로그인 ---")
         user_id = input("ID: ")
-        password = input("Password: ")
-
+        # password = input("Password: ")
+        password = getpass.getpass("Password: ")
         sql = """SELECT id, user_id, name FROM user WHERE user_id = '%s' AND password = '%s'""" % (user_id, password)
         
         cursor.execute(sql)
